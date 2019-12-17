@@ -1,0 +1,26 @@
+$ dig tomas-sqlserver-1.database.windows.net @8.8.8.8
+
+; <<>> DiG 9.11.3-1ubuntu1.7-Ubuntu <<>> tomas-sqlserver-1.database.windows.net @8.8.8.8
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 19089
+;; flags: qr rd ra; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;tomas-sqlserver-1.database.windows.net.        IN A
+
+;; ANSWER SECTION:
+tomas-sqlserver-1.database.windows.net. 299 IN CNAME tomas-sqlserver-1.privatelink.database.windows.net.
+tomas-sqlserver-1.privatelink.database.windows.net. 299 IN CNAME dataslice4.westeurope.database.windows.net.
+dataslice4.westeurope.database.windows.net. 226 IN CNAME dataslice4westeurope.trafficmanager.net.
+dataslice4westeurope.trafficmanager.net. 5 IN CNAME cr2.westeurope1-a.control.database.windows.net.
+cr2.westeurope1-a.control.database.windows.net. 21256 IN A 40.68.37.158
+
+;; Query time: 94 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Mon Dec 16 20:11:50 CET 2019
+;; MSG SIZE  rcvd: 253
+
+$ 

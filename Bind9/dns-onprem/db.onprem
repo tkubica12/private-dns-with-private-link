@@ -1,0 +1,12 @@
+$TTL 60
+@            IN    SOA  localhost. root.localhost.  (
+                          2015112501   ; serial
+                          1h           ; refresh
+                          30m          ; retry
+                          1w           ; expiry
+                          30m)         ; minimum
+                   IN     NS    localhost.
+
+localhost       A   127.0.0.1
+
+vm1.tomas.onprem.    A       192.168.1.10

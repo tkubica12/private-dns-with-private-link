@@ -1,0 +1,17 @@
+// onprem zone
+zone "tomas.onprem" {
+  type master;
+  file "/etc/bind/db.onprem";
+};
+
+// forward to Azure node for private link database
+zone "privatelink.database.windows.net" {
+        type forward;
+        forwarders {10.0.0.4;};
+};
+
+// forward to Azure node for Azure zone
+zone "tomas.azure" {
+        type forward;
+        forwarders {10.0.0.4;};
+};

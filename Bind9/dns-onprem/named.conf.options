@@ -1,0 +1,14 @@
+options {
+        directory "/var/cache/bind";
+
+        // Forwarder to public DNS (eg. OpenDNS)
+        forwarders {
+                208.67.222.222;
+        };
+
+        listen-on port 53 { any; };
+        allow-query { any; };
+        recursion yes;
+
+        auth-nxdomain no;    # conform to RFC1035
+};

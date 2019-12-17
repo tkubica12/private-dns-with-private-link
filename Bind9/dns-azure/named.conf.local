@@ -1,0 +1,6 @@
+// forward to onprem zone
+zone "tomas.onprem" {
+        type forward;
+        forward only;
+        forwarders {10.0.0.5;};
+};
