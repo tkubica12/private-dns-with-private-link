@@ -1,0 +1,98 @@
+ {
+    "if": {
+        "allOf": [
+            {
+                "field": "type",
+                "equals": "Microsoft.Network/privateEndpoints"
+            },
+            {
+                "field": "Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*].privateLinkServiceId",
+                "contains": "Microsoft.Sql"
+            }
+        ]
+    },
+    "then": {
+        "effect": "DeployIfNotExists",
+        "details": {
+            "type": "Microsoft.Network/privateEndpoints",
+            "name": "current",
+            "roleDefinitionIds": [
+                "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24"
+            ],
+            "existenceCondition": {
+                "field": "Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*].privateLinkServiceId",
+                "equals": "NONSENSEVALUE"
+            },
+            "deployment": {
+                "properties": {
+                    "mode": "incremental",
+                    "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                            "plinkName": {
+                                "type": "string"
+                            }
+                        },
+                        "variables": {
+                            "plinkId": "[concat(resourceGroup().id, '/providers/Microsoft.Network/privateEndpoints/', parameters('plinkName'))]"
+                        },
+                        "resources": [
+                            {
+                                "type": "Microsoft.Resources/deployments",
+                                "apiVersion": "2017-05-10",
+                                "name": "plinkPolicyGetPrivateIp",
+                                "properties": {
+                                    "mode": "Incremental",
+                                    "templateLink": {
+                                        "uri":"https://tomuvstore.blob.core.windows.net/public/plinkPolicyGetPrivateIp.json",
+                                        "contentVersion":"1.0.0.0"
+                                    },
+                                    "parameters": {
+                                        "nicId": {
+                                            "value": "[reference(variables('plinkId'), '2019-11-01').networkInterfaces[0].id]"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "Microsoft.Resources/deployments",
+                                "dependsOn":
+                                [
+                                    "plinkPolicyGetPrivateIp"
+                                ],
+                                "apiVersion": "2017-05-10",
+                                "name": "plinkPolicyDnsRecord",
+                                "resourceGroup": "dns",
+                                "subscriptionId": "4fd63c38-a6be-4fb1-ac9e-ab1781af69ad",
+                                "properties": {
+                                    "mode": "Incremental",
+                                    "templateLink": {
+                                        "uri":"https://tomuvstore.blob.core.windows.net/public/plinkPolicyDnsRecord.json",
+                                        "contentVersion":"1.0.0.0"
+                                    },
+                                    "parameters": {
+                                        "ip": {
+                                            "value": "[reference('plinkPolicyGetPrivateIp').outputs.ip.value]"
+                                        },
+                                        "domain": {
+                                            "value": "privatelink.database.windows.net"
+                                        },
+                                        "serviceId": {
+                                            "value": "[reference(variables('plinkId'), '2019-11-01').privateLinkServiceConnections[0].properties.privateLinkServiceId]"
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "parameters": {
+                        "plinkName": {
+                            "value": "[field('Name')]"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

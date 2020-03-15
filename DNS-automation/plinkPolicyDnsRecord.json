@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ip": {
+            "type": "string"
+        },
+        "serviceId": {
+            "type": "string"
+        },
+        "domain": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "host": "[substring(parameters('serviceId'), add(lastIndexOf(parameters('serviceId'), '/'),1), sub(length(parameters('serviceId')), add(lastIndexOf(parameters('serviceId'), '/'), 1)))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(parameters('domain'), '/', variables('host'))]",
+            "properties": {
+                "ttl": 3600,
+                "aRecords": [
+                    {
+                        "ipv4Address": "[parameters('ip')]"
+                    }
+                ]
+            }
+        }
+    ]
+}
