@@ -1,4 +1,4 @@
-# Automating creation of DNS records
+# Automating creation of DNS records for Private Link
 Azure Portal offers creating records in Azure Private DNS as part of GUI wizard. Unfortunatelly this works only for private zones in the same subscription therefore is not ideal for enterprise scenario when custom DNS server in central hub subscription is used. In such case all spoke subscriptions are pointed to custom DNS server which than forwards requestes to on-premises and to private DNS zones configured in hub subscription. Since wizard in spole does not support configuring zone in different subscription (and even if it does enterprise customers will not allow users to access it anyway) different approach is currently needed.
 
 There are few ways to automate this environment including using Azure Functions, Azure Automation, Logic Apps and either use scheduled jobs or react on Azure control plane event flows. All of those require knowledge of such systems including maintenance. Therefore we used Azure Policy to achieve this automation as it is tool central team is familiar with and it is used to fulfil many other governance requirements.
